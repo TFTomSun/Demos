@@ -1,3 +1,15 @@
+requirejs.config({
+    baseUrl: "",
+    paths:
+    {
+        "react": "https://cdnjs.cloudflare.com/ajax/libs/react/15.3.1/react.min",
+        "react-dom": "http://cdnjs.cloudflare.com/ajax/libs/react/15.3.1/react-dom.min",
+    }
+});
+// Load 'react' module at the very beginning of the generated script
+require(["react", "react-dom"], function (react, reactDom) {
+//requirejs.require.Self(new string[] ("react", "react-dom"), es5.Function.Self(). new es5.Function().)
+
 /**
  * @version 1.0.0.0
  * @copyright Copyright ©  2017
@@ -6,83 +18,373 @@
 Bridge.assembly("ReactDemo", function ($asm, globals) {
     "use strict";
 
-    require(["react","react-dom"], function (React,ReactDOM) {
-        Bridge.define("ReactDemo.Demo", {
-            main: function Main () {
-                var root = document.getElementById("root");
-    
-                var formProps = { Label: "Text:", OnSave: function (value) {
-                    System.Console.WriteLine(System.String.format("Entered value: '{0}'.", [value]));
-                } };
-    
-                var formEl = React.createElement(ReactDemo.MessageEntryForm.Class, formProps);
-                ReactDOM.render(formEl, root);
+    var React,
+        ReactDOM;
+
+    Bridge.define("ReactDemo.Framework.ReactLoader", {
+        statics: {
+            methods: {
+                InitBefore: function () {
+                    React = react;
+                    ReactDOM = reactDom;
+                }
             }
-        });
-    
-        Bridge.define("ReactDemo.MessageEntryForm", {
-            inherits: [React.Component],
-            statics: {
-                props: {
-                    Class: {
-                        get: function () {
-                            return ReactDemo.MessageEntryForm;
-                        }
-                    }
-                }
-            },
-            props: {
-                props$1: {
-                    get: function () {
-                        return this.props;
-                    }
+        }
+    });
+
+    Bridge.init(function () { ReactDemo.Framework.ReactLoader.InitBefore(); });
+
+    Bridge.define("CommonExtensions", {
+        statics: {
+            methods: {
+                IsNullOrEmpty: function (value) {
+                    return System.String.isNullOrEmpty(value);
                 },
-                state$1: {
-                    get: function () {
-                        return this.state;
-                    },
-                    set: function (value) {
-                        this.state = value;
+                GetMemberInfo: function (lambda) {
+                    var $t;
+                    if (lambda == null) {
+                        throw new System.ArgumentNullException("method");
                     }
+
+                    var memberExpr = null;
+
+                    if (lambda.body.ntype === 10) {
+                        memberExpr = ($t = ($t = lambda.body, Bridge.cast($t, Bridge.hasValue($t) && ([4,10,11,28,29,30,34,40,44,49,54,60,62,77,78,79,80,82,83,84].indexOf($t.ntype) >= 0))).operand, Bridge.as($t, Bridge.hasValue($t) && ($t.ntype === 23)));
+                    } else if (lambda.body.ntype === 23) {
+                        memberExpr = ($t = lambda.body, Bridge.as($t, Bridge.hasValue($t) && ($t.ntype === 23)));
+                    }
+
+                    if (memberExpr == null) {
+                        throw new System.ArgumentException("method");
+                    }
+
+                    return memberExpr;
                 }
+            }
+        }
+    });
+
+    Bridge.define("Extensions", {
+        statics: {
+            methods: {
+                With$2: function (TNode, TProperties, TValue, descriptor, expression, modifyValue) {
+                    var property = Bridge.cast(CommonExtensions.GetMemberInfo(expression).member, System.Reflection.PropertyInfo);
+                    var existingValue = Bridge.cast(Bridge.Reflection.midel(property.g, descriptor.Properties)(), TValue) || Bridge.createInstance(TValue);
+                    Bridge.Reflection.midel(property.s, descriptor.Properties)(modifyValue(existingValue));
+                    return descriptor;
+                },
+                With: function (TProperties, TValue, descriptor, expression, value) {
+                    var property = Bridge.cast(CommonExtensions.GetMemberInfo(expression).member, System.Reflection.PropertyInfo);
+                    Bridge.Reflection.midel(property.s, descriptor.Properties)(value);
+                    return descriptor;
+                },
+                With$1: function (TNode, TProperties, TValue, descriptor, expression, value) {
+                    var property = Bridge.cast(CommonExtensions.GetMemberInfo(expression).member, System.Reflection.PropertyInfo);
+                    Bridge.Reflection.midel(property.s, descriptor.Properties)(value);
+                    return descriptor;
+                },
+                Render$1: function (TProperties, classDescriptor, targetId) {
+                    var instance = React.createElement(classDescriptor.Class, classDescriptor.Properties);
+                    ReactDOM.render(instance, document.getElementById(targetId));
+                },
+                Render: function (TProperties, classDescriptor, target) {
+                    var instance = React.createElement(classDescriptor.Class, classDescriptor.Properties);
+                    ReactDOM.render(instance, target);
+                },
+                WithPosition: function (properties, left, top) {
+                    if (left === void 0) { left = null; }
+                    if (top === void 0) { top = null; }
+                    if (left != null) {
+                        properties.left = System.Nullable.getValue(left);
+                    }
+                    if (top != null) {
+                        properties.top = System.Nullable.getValue(top);
+                    }
+
+                    return properties;
+                },
+                WithSize: function (properties, width, height) {
+                    if (width === void 0) { width = null; }
+                    if (height === void 0) { height = null; }
+
+                    if (width != null) {
+                        properties.width = System.Nullable.getValue(width);
+                    }
+
+                    if (height != null) {
+                        properties.height = System.Nullable.getValue(height);
+                    }
+                    return properties;
+                },
+                WithMargin: function (properties, left, top, right, bottom) {
+                    if (left === void 0) { left = null; }
+                    if (top === void 0) { top = null; }
+                    if (right === void 0) { right = null; }
+                    if (bottom === void 0) { bottom = null; }
+                    if (left != null) {
+                        properties.marginLeft = System.Nullable.getValue(left);
+                    }
+                    if (top != null) {
+                        properties.marginTop = System.Nullable.getValue(top);
+                    }
+
+                    if (right != null) {
+                        properties.marginRight = System.Nullable.getValue(right);
+                    }
+
+                    if (bottom != null) {
+                        properties.marginBottom = System.Nullable.getValue(bottom);
+                    }
+                    return properties;
+                },
+                Add: function (TChildNode, TChildProperties, descriptor, expression, key) {
+                    if (key === void 0) { key = null; }
+                    var child = Extensions.Define(TChildNode, TChildProperties, expression(React.DOM), key);
+                    descriptor.ReactDemo$Framework$IDomNodeDescriptor$Children.add(child);
+                    return child;
+                },
+                WithInnerHtml$1: function (TNode, TProperties, descriptor, html, iKnowWhatIDo) {
+                    return Extensions.WithInnerHtml(TNode, TProperties, descriptor, html);
+
+                },
+                WithInnerHtml: function (TNode, TProperties, descriptor, html) {
+                    descriptor.Properties.dangerouslySetInnerHTML = { __html: html };
+                    return descriptor;
+                },
+                WithOnChange: function (TNode, TProperties, descriptor, eventHandler) {
+                    descriptor.Properties.onChange = function (eh) {
+                            eventHandler(eh.currentTarget);
+                        };
+                    return descriptor;
+                },
+                WithOnClick: function (TNode, TProperties, descriptor, clickHandler) {
+
+                    descriptor.Properties.onClick = clickHandler;
+                    return descriptor;
+                },
+                Define: function (TNode, P, factory, key) {
+                    if (key === void 0) { key = null; }
+                    var node = new (ReactDemo.Framework.DomNodeDescriptor$2(TNode,P))(factory);
+                    node.Key = key;
+
+                    return node;
+
+
+                }
+            }
+        }
+    });
+
+    Bridge.define("ReactDemo.Demo", {
+        main: function Main () {
+            function loadScript(url, callback)
+            {
+                // Adding the script tag to the head as suggested before
+                var head = document.getElementsByTagName('head')[0];
+                var script = document.createElement('script');
+                script.type = 'text/javascript';
+                script.src = url;
+
+                // Then bind the event to the callback function.
+                // There are several events for cross browser compatibility.
+                script.onreadystatechange = callback;
+                script.onload = callback;
+
+                // Fire the loading
+                head.appendChild(script);
+            }
+            loadScript("js/ReactDemo.meta.js", function(){new ReactDemo.Demo().Run();});
+
+            //new Demo().Run();
+        },
+        methods: {
+            Run: function () {
+                var $t, $t1, $t2, $t3, $t4, $t5;
+                Extensions.Render$1(Bridge.global.ReactDemo.MessageEntryForm.Props, Extensions.With(Bridge.global.ReactDemo.MessageEntryForm.Props, Bridge.global.Function, Extensions.With(Bridge.global.ReactDemo.MessageEntryForm.Props, System.String, ReactDemo.Framework.ReactComponent$3(ReactDemo.MessageEntryForm,ReactDemo.MessageEntryForm.Props,ReactDemo.MessageEntryForm.State).Define(), ($t = { ntype: 38, t: ReactDemo.MessageEntryForm.Props, n: "x" }, ($t2 = ($t1 = Bridge.getMetadata(ReactDemo.MessageEntryForm.Props).m[1], { ntype: 23, t: $t1.rt, expression: $t, member: $t1 }), { ntype: 18, t: Function, rt: $t2.t, body: $t2, p: Bridge.toList([$t]) })), "Text:"), ($t3 = { ntype: 38, t: ReactDemo.MessageEntryForm.Props, n: "x" }, ($t5 = ($t4 = Bridge.getMetadata(ReactDemo.MessageEntryForm.Props).m[2], { ntype: 23, t: $t4.rt, expression: $t3, member: $t4 }), { ntype: 18, t: Function, rt: $t5.t, body: $t5, p: Bridge.toList([$t3]) })), function (value) {
+                    System.Console.WriteLine(System.String.format("Entered value: '{0}'.", [value]));
+                }), "root");
+            }
+        }
+    });
+
+    Bridge.define("ReactDemo.Framework.ClassDescriptor$1", function (TProperties) { return {
+        fields: {
+            Properties: Bridge.getDefaultValue(TProperties),
+            Class: null
+        },
+        ctors: {
+            ctor: function ($class) {
+                this.$initialize();
+                this.Class = $class;
+                this.Properties = Bridge.createInstance(TProperties);
+            }
+        }
+    }; });
+
+    Bridge.define("ReactDemo.Framework.IDomNodeDescriptor", {
+        $kind: "interface"
+    });
+
+    Bridge.definei("ReactDemo.Framework.IDomNodeDescriptor$1", function (TProperties) { return {
+        inherits: [ReactDemo.Framework.IDomNodeDescriptor],
+        $kind: "interface",
+        $variance: [1]
+    }; });
+
+    Bridge.define("ReactDemo.Framework.DomNodeDescriptor$2", function (TNode, TProperties) { return {
+        inherits: [ReactDemo.Framework.IDomNodeDescriptor$1(TProperties)],
+        fields: {
+            Properties: Bridge.getDefaultValue(TProperties),
+            ClassAttributes: null,
+            Factory: null,
+            Key: null,
+            Children: null
+        },
+        alias: [
+            "Children", "ReactDemo$Framework$IDomNodeDescriptor$Children",
+            "CreateNode", "ReactDemo$Framework$IDomNodeDescriptor$CreateNode"
+        ],
+        ctors: {
+            init: function () {
+                this.ClassAttributes = { };
+                this.Children = new (System.Collections.Generic.List$1(ReactDemo.Framework.IDomNodeDescriptor)).ctor();
             },
-            ctors: {
-                ctor: function (p) {
-                    this.$initialize();
-                    React.Component.call(this, p);
-                    this.state$1 = { Value: "" };
+            ctor: function (factory) {
+                this.$initialize();
+                this.Factory = factory;
+                var properties = Bridge.createInstance(TProperties);
+                var htmlProperties = properties;
+                if (htmlProperties != null) {
+                    htmlProperties.style = new (Bridge.virtualc("React.CSSProperties"))();
+                }
+                this.Properties = properties;
+            }
+        },
+        methods: {
+            CreateNode: function () {
+                return this.CreateElement();
+            },
+            CreateElement: function () {
+
+                var config = this.Properties;
+                config.key = this.Key;
+                if (this.Children.Count === 0) {
+                    return this.Factory(config, null);
+                }
+
+                return this.Factory(config, System.Linq.Enumerable.from(this.Children).select(function (c) {
+                            return c.ReactDemo$Framework$IDomNodeDescriptor$CreateNode();
+                        }).toArray(Bridge.virtualc("React.ReactNode")));
+            },
+            ReactDemo$Framework$IDomNodeDescriptor$CreateElement: function () {
+                return this.CreateElement();
+            }
+        }
+    }; });
+
+    Bridge.define("ReactDemo.Framework.ReactComponent$3", function (TSelf, TProperties, TState) { return {
+        inherits: [React.Component],
+        statics: {
+            props: {
+                Class: {
+                    get: function () {
+                        return TSelf;
+                    }
                 }
             },
             methods: {
-                render: function () {
-                    var $t;
-                    // Create label:
-                    var labelConfig = { key: "label1" };
-                    var labelNode = React.DOM.label(labelConfig, this.props$1.Label);
-    
-                    // Create input:
-                    var inputConfig = { style: ($t = new (Bridge.virtualc("React.CSSProperties"))(), $t.marginLeft = 20, $t), value: this.state$1.Value, onChange: Bridge.fn.bind(this, function (e) {
-                            this.setState({ Value: e.currentTarget.value });
-                        }) };
-                    inputConfig.key = "input1";
-                    var inputNode = React.DOM.input(inputConfig, null);
-    
-                    // Create button:
-                    var buttonConfig = { style: ($t = new (Bridge.virtualc("React.CSSProperties"))(), $t.height = 28, $t.width = 150, $t.marginLeft = 20, $t), dangerouslySetInnerHTML: { __html: System.String.isNullOrWhiteSpace(this.state$1.Value) ? "Enter text" : "Print to Console" }, disabled: System.String.isNullOrWhiteSpace(this.state$1.Value), onClick: Bridge.fn.bind(this, function (e) {
-                            this.props$1.OnSave(this.state$1.Value);
-                        }) };
-                    buttonConfig.key = "button1";
-                    var buttonNode = React.DOM.button(buttonConfig, null);
-    
-                    // Create div:
-                    var div = React.DOM.div({ className: "wrapper" }, System.Array.init([labelNode, inputNode, buttonNode], Bridge.virtualc("React.ReactNode")));
-    
-                    return div;
+                Define: function () {
+                    return new (ReactDemo.Framework.ClassDescriptor$1(TProperties))(ReactDemo.Framework.ReactComponent$3(TSelf,TProperties,TState).Class);
                 }
             }
-        });
-        Bridge.init();
+        },
+        props: {
+            props$1: {
+                get: function () {
+                    return this.props;
+                }
+            },
+            state$1: {
+                get: function () {
+                    return this.state;
+                }
+            }
+        },
+        ctors: {
+            ctor: function (properties) {
+                this.$initialize();
+                React.Component.call(this, properties);
+                var state = Bridge.createInstance(TState);
+                this.state = state;
+            }
+        },
+        methods: {
+            render: function () {
+                return this.DoRender().ReactDemo$Framework$IDomNodeDescriptor$CreateElement();
+            },
+            Define: function (TChildNode, TChildProperties, expression, key) {
+                if (key === void 0) { key = null; }
+                return Extensions.Define(TChildNode, TChildProperties, expression(React.DOM), key);
+            },
+            UpdateState: function (TValue, propertyExpression, value) {
+                var propertyInfo = Bridge.cast(CommonExtensions.GetMemberInfo(propertyExpression).member, System.Reflection.PropertyInfo);
+                Bridge.Reflection.midel(propertyInfo.s, this.state$1)(value);
+                this.setState(this.state$1); //UpdateState();
+            }
+        }
+    }; });
+
+    Bridge.define("ReactDemo.MessageEntryForm.State", {
+        fields: {
+            Value: null
+        }
+    });
+
+    Bridge.define("ReactDemo.MessageEntryForm.Props", {
+        fields: {
+            Label: null,
+            OnSave: null
+        }
+    });
+
+    Bridge.define("ReactDemo.MessageEntryForm", {
+        inherits: function () { return [ReactDemo.Framework.ReactComponent$3(ReactDemo.MessageEntryForm,ReactDemo.MessageEntryForm.Props,ReactDemo.MessageEntryForm.State)]; },
+        ctors: {
+            ctor: function (p) {
+                this.$initialize();
+                ReactDemo.Framework.ReactComponent$3(ReactDemo.MessageEntryForm,ReactDemo.MessageEntryForm.Props,ReactDemo.MessageEntryForm.State).ctor.call(this, p);
+            }
+        },
+        methods: {
+            DoRender: function () {
+                var $t, $t1, $t2, $t3, $t4, $t5, $t6, $t7, $t8, $t9, $t10, $t11, $t12, $t13, $t14, $t15, $t16, $t17;
+                var div = Extensions.With$1(Bridge.global.HTMLDivElement, Bridge.global.System.Object, System.String, this.Define(Bridge.global.HTMLDivElement, Bridge.global.System.Object, function (x) {
+                    return x.div;
+                }), ($t = { ntype: 38, t: System.Object, n: "x" }, ($t2 = ($t1 = {"td":System.Object,"a":2,"n":"className","t":16,"rt":System.String,"g":{"td":System.Object,"a":2,"n":"get_className","t":8,"rt":System.String,"fg":"className"},"s":{"td":System.Object,"a":2,"n":"set_className","t":8,"p":[System.String],"rt":System.Void,"fs":"className"},"fn":"className"}, { ntype: 23, t: $t1.rt, expression: $t, member: $t1 }), { ntype: 18, t: Function, rt: $t2.t, body: $t2, p: Bridge.toList([$t]) })), "wrapper");
+                Extensions.WithInnerHtml$1(Bridge.global.HTMLLabelElement, Bridge.global.System.Object, Extensions.Add(Bridge.global.HTMLLabelElement, Bridge.global.System.Object, div, function (x) {
+                    return x.label;
+                }), this.props$1.Label, true);
+                Extensions.WithOnChange(Bridge.global.HTMLInputElement, Bridge.global.System.Object, Extensions.With$2(Bridge.global.HTMLInputElement, Bridge.global.System.Object, Bridge.virtualc("React.CSSProperties"), Extensions.With$1(Bridge.global.HTMLInputElement, Bridge.global.System.Object, System.Nullable$1(System.Double), Extensions.With$1(Bridge.global.HTMLInputElement, Bridge.global.System.Object, Bridge.global.System.Object, Extensions.Add(Bridge.global.HTMLInputElement, Bridge.global.System.Object, div, function (x) {
+                    return x.input;
+                }, "input1"), ($t3 = { ntype: 38, t: System.Object, n: "x" }, ($t5 = ($t4 = {"td":System.Object,"a":2,"n":"value","t":16,"rt":System.Object,"g":{"td":System.Object,"a":2,"n":"get_value","t":8,"rt":System.Object,"fg":"value"},"s":{"td":System.Object,"a":2,"n":"set_value","t":8,"p":[System.Object],"rt":System.Void,"fs":"value"},"fn":"value"}, { ntype: 23, t: $t4.rt, expression: $t3, member: $t4 }), { ntype: 18, t: Function, rt: $t5.t, body: $t5, p: Bridge.toList([$t3]) })), this.state$1.Value), ($t6 = { ntype: 38, t: System.Object, n: "x" }, ($t8 = ($t7 = {"td":System.Object,"a":2,"n":"size","t":16,"rt":System.Nullable$1(System.Double),"g":{"td":System.Object,"a":2,"n":"get_size","t":8,"rt":System.Nullable$1(System.Double),"fg":"size","box":function ($v) { return Bridge.box($v, System.Double, System.Nullable.toStringFn(System.Double.format), System.Nullable.getHashCodeFn(System.Double.getHashCode));}},"s":{"td":System.Object,"a":2,"n":"set_size","t":8,"p":[System.Nullable$1(System.Double)],"rt":System.Void,"fs":"size"},"fn":"size"}, { ntype: 23, t: $t7.rt, expression: $t6, member: $t7 }), { ntype: 18, t: Function, rt: $t8.t, body: $t8, p: Bridge.toList([$t6]) })), 50), ($t9 = { ntype: 38, t: System.Object, n: "x" }, ($t11 = ($t10 = {"td":System.Object,"a":2,"n":"style","t":16,"rt":Bridge.virtualc("React.CSSProperties"),"g":{"td":System.Object,"a":2,"n":"get_style","t":8,"rt":Bridge.virtualc("React.CSSProperties"),"fg":"style"},"s":{"td":System.Object,"a":2,"n":"set_style","t":8,"p":[Bridge.virtualc("React.CSSProperties")],"rt":System.Void,"fs":"style"},"fn":"style"}, { ntype: 23, t: $t10.rt, expression: $t9, member: $t10 }), { ntype: 18, t: Function, rt: $t11.t, body: $t11, p: Bridge.toList([$t9]) })), function (s) {
+                    return Extensions.WithMargin(s, 50);
+                }), Bridge.fn.bind(this, function (e) {
+                    var $t12, $t13, $t14;
+                    this.UpdateState(System.String, ($t12 = { ntype: 38, t: ReactDemo.MessageEntryForm.State, n: "x" }, ($t14 = ($t13 = Bridge.getMetadata(ReactDemo.MessageEntryForm.State).m[1], { ntype: 23, t: $t13.rt, expression: $t12, member: $t13 }), { ntype: 18, t: Function, rt: $t14.t, body: $t14, p: Bridge.toList([$t12]) })), e.value);
+                }));
+
+                var button = Extensions.WithOnClick(Bridge.global.HTMLButtonElement, Bridge.global.System.Object, Extensions.WithInnerHtml$1(Bridge.global.HTMLButtonElement, Bridge.global.System.Object, Extensions.With$1(Bridge.global.HTMLButtonElement, Bridge.global.System.Object, System.Nullable$1(System.Boolean), Extensions.With$2(Bridge.global.HTMLButtonElement, Bridge.global.System.Object, Bridge.virtualc("React.CSSProperties"), Extensions.Add(Bridge.global.HTMLButtonElement, Bridge.global.System.Object, div, function (x) {
+                    return x.button;
+                }, "button1"), ($t12 = { ntype: 38, t: System.Object, n: "x" }, ($t14 = ($t13 = {"td":System.Object,"a":2,"n":"style","t":16,"rt":Bridge.virtualc("React.CSSProperties"),"g":{"td":System.Object,"a":2,"n":"get_style","t":8,"rt":Bridge.virtualc("React.CSSProperties"),"fg":"style"},"s":{"td":System.Object,"a":2,"n":"set_style","t":8,"p":[Bridge.virtualc("React.CSSProperties")],"rt":System.Void,"fs":"style"},"fn":"style"}, { ntype: 23, t: $t13.rt, expression: $t12, member: $t13 }), { ntype: 18, t: Function, rt: $t14.t, body: $t14, p: Bridge.toList([$t12]) })), function (v) {
+                    return Extensions.WithMargin(Extensions.WithSize(v, 150, 28), 20);
+                }), ($t15 = { ntype: 38, t: System.Object, n: "x" }, ($t17 = ($t16 = {"td":System.Object,"a":2,"n":"disabled","t":16,"rt":System.Nullable$1(System.Boolean),"g":{"td":System.Object,"a":2,"n":"get_disabled","t":8,"rt":System.Nullable$1(System.Boolean),"fg":"disabled","box":function ($v) { return Bridge.box($v, System.Boolean, System.Nullable.toStringFn(System.Boolean.toString), System.Nullable.getHashCode);}},"s":{"td":System.Object,"a":2,"n":"set_disabled","t":8,"p":[System.Nullable$1(System.Boolean)],"rt":System.Void,"fs":"disabled"},"fn":"disabled"}, { ntype: 23, t: $t16.rt, expression: $t15, member: $t16 }), { ntype: 18, t: Function, rt: $t17.t, body: $t17, p: Bridge.toList([$t15]) })), System.String.isNullOrWhiteSpace(this.state$1.Value)), CommonExtensions.IsNullOrEmpty(this.state$1.Value) ? "Enter Text..." : "Print to Console", true), Bridge.fn.bind(this, function (e) {
+                    this.props$1.OnSave(this.state$1.Value);
+                }));
+
+                return div;
+            }
+        }
     });
 });
 
-//# sourceMappingURL=data:application/json;base64,ewogICJ2ZXJzaW9uIjogMywKICAiZmlsZSI6ICJSZWFjdERlbW8uanMiLAogICJzb3VyY2VSb290IjogIiIsCiAgInNvdXJjZXMiOiBbIkRlbW8uY3MiXSwKICAibmFtZXMiOiBbIiJdLAogICJtYXBwaW5ncyI6ICI7Ozs7Ozs7Ozs7O2dCQWNZQSxXQUFXQTs7Z0JBRVhBLGdCQUFnQkEsMEJBR0hBO29CQUFTQSx5QkFBeUJBLCtDQUFzQ0E7OztnQkFHckZBLGFBQWFBLG9CQUE0RUEsa0NBQXdCQTtnQkFDakhBLGdCQUFtRUEsUUFBUUE7Ozs7Ozs7Ozs7NEJBTXVCQSxPQUFPQSxBQUFPQTs7Ozs7Ozs7d0JBRXhGQSxPQUFPQTs7Ozs7d0JBSXpCQSxPQUFPQTs7O3dCQUNQQSxhQUFhQTs7Ozs7Z0NBR0NBOzsrQ0FDYkE7b0JBRVBBLGVBQVFBOzs7Ozs7O29CQU9SQSxrQkFDSUE7b0JBSUpBLGdCQUFnQkEsQUFBbUpBLGdCQUFtQ0EsYUFBYUE7OztvQkFHbk5BLGtCQUNJQSxTQUVZQSxXQUFJQSwyRUFJSkEsOEJBQ0dBLEFBQWtEQSxBQUF1R0E7NEJBRWhLQSxjQUEwRUEsU0FBb0JBOztvQkFHMUdBO29CQUNBQSxnQkFBZ0JBLEFBQStKQSxnQkFBbUNBOzs7b0JBR2xOQSxtQkFDSUEsU0FFWUEsV0FBSUEsNkhBTWNBLFVBRWRBLGlDQUEwQkEscUVBRTNCQSxpQ0FBMEJBLDhCQUMzQkEsQUFBa0RBLEFBQXVHQTs0QkFBS0Esb0JBQWFBOztvQkFFN0xBO29CQUNBQSxpQkFBaUJBLEFBQXFKQSxpQkFBb0NBOzs7b0JBRzFNQSxVQUFVQSxjQUFpQ0EsMEJBQXNHQSxtQkFDN0lBLFdBQ0FBLFdBQ0FBOztvQkFFSkEsT0FBT0EiLAogICJzb3VyY2VzQ29udGVudCI6IFsidXNpbmcgU3lzdGVtO1xyXG51c2luZyBCcmlkZ2U7XHJcbnVzaW5nIFJldHlwZWQ7XHJcblxyXG5uYW1lc3BhY2UgUmVhY3REZW1vXHJcbntcclxuICAgIHVzaW5nIERpdkF0dHIgPSBIVE1MQXR0cmlidXRlczxIVE1MRGl2RWxlbWVudD47XHJcbiAgICB1c2luZyBJbnB1dEF0dHIgPSBDaGFuZ2VUYXJnZXRIVE1MQXR0cmlidXRlczxIVE1MSW5wdXRFbGVtZW50PjtcclxuICAgIHVzaW5nIEJ1dHRvbkF0dHIgPSBDaGFuZ2VUYXJnZXRIVE1MQXR0cmlidXRlczxIVE1MQnV0dG9uRWxlbWVudD47XHJcblxyXG4gICAgcHVibGljIGNsYXNzIERlbW9cclxuICAgIHtcclxuICAgICAgICBwdWJsaWMgc3RhdGljIHZvaWQgTWFpbigpXHJcbiAgICAgICAge1xyXG4gICAgICAgICAgICB2YXIgcm9vdCA9IFJldHlwZWQuZG9tLmRvY3VtZW50LmdldEVsZW1lbnRCeUlkKFwicm9vdFwiKTtcclxuXHJcbiAgICAgICAgICAgIHZhciBmb3JtUHJvcHMgPSBuZXcgTWVzc2FnZUVudHJ5Rm9ybS5Qcm9wc1xyXG4gICAgICAgICAgICB7XHJcbiAgICAgICAgICAgICAgICBMYWJlbCA9IFwiVGV4dDpcIixcclxuICAgICAgICAgICAgICAgIE9uU2F2ZSA9IHZhbHVlID0+IFN5c3RlbS5Db25zb2xlLldyaXRlTGluZShzdHJpbmcuRm9ybWF0KFwiRW50ZXJlZCB2YWx1ZTogJ3swfScuXCIsdmFsdWUpKVxyXG4gICAgICAgICAgICB9O1xyXG5cclxuICAgICAgICAgICAgdmFyIGZvcm1FbCA9IFJldHlwZWQucmVhY3QuUmVhY3QuY3JlYXRlRWxlbWVudDxnbG9iYWw6OlJlYWN0RGVtby5NZXNzYWdlRW50cnlGb3JtLlByb3BzPihNZXNzYWdlRW50cnlGb3JtLkNsYXNzLCBmb3JtUHJvcHMpO1xyXG4gICAgICAgICAgICBSZXR5cGVkLnJlYWN0X2RvbS5yZW5kZXI8Z2xvYmFsOjpSZWFjdERlbW8uTWVzc2FnZUVudHJ5Rm9ybS5Qcm9wcz4oZm9ybUVsLCByb290KTtcclxuICAgICAgICB9XHJcbiAgICB9XHJcblxyXG4gICAgcHVibGljIGNsYXNzIE1lc3NhZ2VFbnRyeUZvcm0gOiBSZXR5cGVkLnJlYWN0LlJlYWN0LkNvbXBvbmVudFxyXG48Z2xvYmFsOjpSZWFjdERlbW8uTWVzc2FnZUVudHJ5Rm9ybS5Qcm9wcyxnbG9iYWw6OlJlYWN0RGVtby5NZXNzYWdlRW50cnlGb3JtLlN0YXRlPiAgICB7XHJcbiAgICAgICAgcHVibGljIHN0YXRpYyBSZXR5cGVkLnJlYWN0LlJlYWN0LkNvbXBvbmVudENsYXNzIDxnbG9iYWw6OlJlYWN0RGVtby5NZXNzYWdlRW50cnlGb3JtLlByb3BzPkNsYXNzIHtnZXR7cmV0dXJuIHR5cGVvZihNZXNzYWdlRW50cnlGb3JtKS5BczxSZXR5cGVkLnJlYWN0LlJlYWN0LkNvbXBvbmVudENsYXNzPGdsb2JhbDo6UmVhY3REZW1vLk1lc3NhZ2VFbnRyeUZvcm0uUHJvcHM+PigpO319XHJcblxyXG4gICAgICAgIHB1YmxpYyBuZXcgUHJvcHMgcHJvcHMge2dldHtyZXR1cm4gYmFzZS5wcm9wcy5BczxQcm9wcz4oKTt9fVxyXG5cclxuICAgICAgICBwdWJsaWMgbmV3IFN0YXRlIHN0YXRlXHJcbiAgICAgICAge1xyXG4gICAgICAgICAgICBnZXQgeyByZXR1cm4gYmFzZS5zdGF0ZS5BczxTdGF0ZT4oKTsgfVxyXG4gICAgICAgICAgICBzZXQgeyBiYXNlLnN0YXRlID0gdmFsdWUuQXM8ZXM1LlJlYWRvbmx5PFN0YXRlPj4oKTsgfVxyXG4gICAgICAgIH1cclxuICAgIFxyXG4gICAgICAgIHB1YmxpYyBNZXNzYWdlRW50cnlGb3JtKFByb3BzIHApXHJcbiAgICAgICAgICAgIDogYmFzZShwKVxyXG4gICAgICAgIHtcclxuICAgICAgICAgICAgc3RhdGUgPSBuZXcgU3RhdGUgeyBWYWx1ZSA9IFwiXCIgfTtcclxuICAgICAgICB9XHJcblxyXG4gICAgICAgIFtOYW1lKFwicmVuZGVyXCIpXVxyXG4gICAgICAgIHB1YmxpYyBSZXR5cGVkLnJlYWN0LlJlYWN0LlJlYWN0RWxlbWVudCA8Z2xvYmFsOjpSZXR5cGVkLnJlYWN0LlJlYWN0LkhUTUxBdHRyaWJ1dGVzPGdsb2JhbDo6UmV0eXBlZC5kb20uSFRNTERpdkVsZW1lbnQ+PlJlbmRlcigpXHJcbiAgICAgICAge1xyXG4gICAgICAgICAgICAvLyBDcmVhdGUgbGFiZWw6XHJcbiAgICAgICAgICAgIEludGVyc2VjdGlvbjxSZXR5cGVkLnJlYWN0LlJlYWN0LkNsYXNzQXR0cmlidXRlczxnbG9iYWw6OlJldHlwZWQuZG9tLkhUTUxMYWJlbEVsZW1lbnQ+LCBSZXR5cGVkLnJlYWN0LlJlYWN0LkhUTUxBdHRyaWJ1dGVzPGdsb2JhbDo6UmV0eXBlZC5kb20uSFRNTExhYmVsRWxlbWVudD4+IGxhYmVsQ29uZmlnID1cclxuICAgICAgICAgICAgICAgIG5ldyBSZXR5cGVkLnJlYWN0LlJlYWN0LkNsYXNzQXR0cmlidXRlc1xyXG48Z2xvYmFsOjpSZXR5cGVkLmRvbS5IVE1MTGFiZWxFbGVtZW50PiAgICAgICAgICAgICAgICB7XHJcbiAgICAgICAgICAgICAgICAgICAga2V5ID0gXCJsYWJlbDFcIlxyXG4gICAgICAgICAgICAgICAgfTtcclxuICAgICAgICAgICAgdmFyIGxhYmVsTm9kZSA9IFJlYWN0RGVtby5FeHRlbnNpb25zLkFzTm9kZTxnbG9iYWw6OlJldHlwZWQucmVhY3QuUmVhY3QuSFRNTEF0dHJpYnV0ZXM8Z2xvYmFsOjpSZXR5cGVkLmRvbS5IVE1MTGFiZWxFbGVtZW50PixnbG9iYWw6OlJldHlwZWQuZG9tLkhUTUxMYWJlbEVsZW1lbnQ+KFJldHlwZWQucmVhY3QuUmVhY3QuRE9NLmxhYmVsLlNlbGYobGFiZWxDb25maWcsIHByb3BzLkxhYmVsKSk7XHJcblxyXG4gICAgICAgICAgICAvLyBDcmVhdGUgaW5wdXQ6XHJcbiAgICAgICAgICAgIEludGVyc2VjdGlvbjxSZXR5cGVkLnJlYWN0LlJlYWN0LkNsYXNzQXR0cmlidXRlczxnbG9iYWw6OlJldHlwZWQuZG9tLkhUTUxJbnB1dEVsZW1lbnQ+LCBSZXR5cGVkLnJlYWN0LlJlYWN0LkNoYW5nZVRhcmdldEhUTUxBdHRyaWJ1dGVzPGdsb2JhbDo6UmV0eXBlZC5kb20uSFRNTElucHV0RWxlbWVudD4+IGlucHV0Q29uZmlnID1cclxuICAgICAgICAgICAgICAgIG5ldyBSZXR5cGVkLnJlYWN0LlJlYWN0LkNoYW5nZVRhcmdldEhUTUxBdHRyaWJ1dGVzXHJcbjxnbG9iYWw6OlJldHlwZWQuZG9tLkhUTUxJbnB1dEVsZW1lbnQ+ICAgICAgICAgICAgICAgIHtcclxuICAgICAgICAgICAgICAgICAgICBzdHlsZSA9IG5ldyBSZXR5cGVkLnJlYWN0LlJlYWN0LkNTU1Byb3BlcnRpZXNcclxuICAgICAgICAgICAgICAgICAgICB7XHJcbiAgICAgICAgICAgICAgICAgICAgICAgIG1hcmdpbkxlZnQgPSAyMCxcclxuICAgICAgICAgICAgICAgICAgICB9LFxyXG4gICAgICAgICAgICAgICAgICAgIHZhbHVlID0gc3RhdGUuVmFsdWUsXHJcbiAgICAgICAgICAgICAgICAgICAgb25DaGFuZ2UgPSBIYW5kbGVyLkNoYW5nZUV2ZW50PFJldHlwZWQuZG9tLkhUTUxJbnB1dEVsZW1lbnQ+KChnbG9iYWw6OlN5c3RlbS5BY3Rpb248Z2xvYmFsOjpSZXR5cGVkLnJlYWN0LlJlYWN0LkNoYW5nZUV2ZW50PGdsb2JhbDo6UmV0eXBlZC5kb20uSFRNTElucHV0RWxlbWVudD4+KShlID0+XHJcbiAgICAgICAgICAgICAgICAgICAge1xyXG4gICAgICAgICAgICAgICAgICAgICAgICBzZXRTdGF0ZTxnbG9iYWw6OlJldHlwZWQuS2V5T2Y8Z2xvYmFsOjpSZWFjdERlbW8uTWVzc2FnZUVudHJ5Rm9ybS5TdGF0ZT4+KG5ldyBTdGF0ZSB7IFZhbHVlID0gZS5jdXJyZW50VGFyZ2V0LlR5cGUyLnZhbHVlfSk7XHJcbiAgICAgICAgICAgICAgICAgICAgfSkpXHJcbiAgICAgICAgICAgICAgICB9O1xyXG4gICAgICAgICAgICBpbnB1dENvbmZpZy5UeXBlMS5rZXkgPSBcImlucHV0MVwiO1xyXG4gICAgICAgICAgICB2YXIgaW5wdXROb2RlID0gUmVhY3REZW1vLkV4dGVuc2lvbnMuQXNOb2RlPGdsb2JhbDo6UmV0eXBlZC5yZWFjdC5SZWFjdC5DaGFuZ2VUYXJnZXRIVE1MQXR0cmlidXRlczxnbG9iYWw6OlJldHlwZWQuZG9tLkhUTUxJbnB1dEVsZW1lbnQ+LGdsb2JhbDo6UmV0eXBlZC5kb20uSFRNTElucHV0RWxlbWVudD4oUmV0eXBlZC5yZWFjdC5SZWFjdC5ET00uaW5wdXQuU2VsZihpbnB1dENvbmZpZykpO1xyXG5cclxuICAgICAgICAgICAgLy8gQ3JlYXRlIGJ1dHRvbjpcclxuICAgICAgICAgICAgSW50ZXJzZWN0aW9uPFJldHlwZWQucmVhY3QuUmVhY3QuQ2xhc3NBdHRyaWJ1dGVzPGdsb2JhbDo6UmV0eXBlZC5kb20uSFRNTEJ1dHRvbkVsZW1lbnQ+LCBSZXR5cGVkLnJlYWN0LlJlYWN0LkhUTUxBdHRyaWJ1dGVzPGdsb2JhbDo6UmV0eXBlZC5kb20uSFRNTEJ1dHRvbkVsZW1lbnQ+PiBidXR0b25Db25maWcgPVxyXG4gICAgICAgICAgICAgICAgbmV3IFJldHlwZWQucmVhY3QuUmVhY3QuSFRNTEF0dHJpYnV0ZXNcclxuPGdsb2JhbDo6UmV0eXBlZC5kb20uSFRNTEJ1dHRvbkVsZW1lbnQ+ICAgICAgICAgICAgICAgIHtcclxuICAgICAgICAgICAgICAgICAgICBzdHlsZSA9IG5ldyBSZXR5cGVkLnJlYWN0LlJlYWN0LkNTU1Byb3BlcnRpZXNcclxuICAgICAgICAgICAgICAgICAgICB7XHJcbiAgICAgICAgICAgICAgICAgICAgICAgIGhlaWdodCA9IDI4LFxyXG4gICAgICAgICAgICAgICAgICAgICAgICB3aWR0aCA9IDE1MCxcclxuICAgICAgICAgICAgICAgICAgICAgICAgbWFyZ2luTGVmdCA9IDIwLFxyXG4gICAgICAgICAgICAgICAgICAgIH0sXHJcbiAgICAgICAgICAgICAgICAgICAgZGFuZ2Vyb3VzbHlTZXRJbm5lckhUTUwgPSBuZXcgUmV0eXBlZC5yZWFjdC5SZWFjdC5ET01BdHRyaWJ1dGVzPGdsb2JhbDo6UmV0eXBlZC5kb20uSFRNTEJ1dHRvbkVsZW1lbnQ+LmRhbmdlcm91c2x5U2V0SW5uZXJIVE1MQ29uZmlnKClcclxuICAgICAgICAgICAgICAgICAgICB7XHJcbiAgICAgICAgICAgICAgICAgICAgICAgIF9faHRtbCA9c3RyaW5nLklzTnVsbE9yV2hpdGVTcGFjZShzdGF0ZS5WYWx1ZSkgPyBcIkVudGVyIHRleHRcIiA6IFwiUHJpbnQgdG8gQ29uc29sZVwiLFxyXG4gICAgICAgICAgICAgICAgICAgIH0sXHJcbiAgICAgICAgICAgICAgICAgICAgZGlzYWJsZWQgPSBzdHJpbmcuSXNOdWxsT3JXaGl0ZVNwYWNlKHN0YXRlLlZhbHVlKSxcclxuICAgICAgICAgICAgICAgICAgICBvbkNsaWNrID0gSGFuZGxlci5Nb3VzZUV2ZW50PFJldHlwZWQuZG9tLkhUTUxCdXR0b25FbGVtZW50PigoZ2xvYmFsOjpTeXN0ZW0uQWN0aW9uPGdsb2JhbDo6UmV0eXBlZC5yZWFjdC5SZWFjdC5Nb3VzZUV2ZW50PGdsb2JhbDo6UmV0eXBlZC5kb20uSFRNTEJ1dHRvbkVsZW1lbnQ+PikoZSA9PiBwcm9wcy5PblNhdmUoc3RhdGUuVmFsdWUpKSlcclxuICAgICAgICAgICAgICAgIH07XHJcbiAgICAgICAgICAgIGJ1dHRvbkNvbmZpZy5UeXBlMS5rZXkgPSBcImJ1dHRvbjFcIjtcclxuICAgICAgICAgICAgdmFyIGJ1dHRvbk5vZGUgPSBSZWFjdERlbW8uRXh0ZW5zaW9ucy5Bc05vZGU8Z2xvYmFsOjpSZXR5cGVkLnJlYWN0LlJlYWN0LkhUTUxBdHRyaWJ1dGVzPGdsb2JhbDo6UmV0eXBlZC5kb20uSFRNTEJ1dHRvbkVsZW1lbnQ+LGdsb2JhbDo6UmV0eXBlZC5kb20uSFRNTEJ1dHRvbkVsZW1lbnQ+KFJldHlwZWQucmVhY3QuUmVhY3QuRE9NLmJ1dHRvbi5TZWxmKGJ1dHRvbkNvbmZpZykpO1xyXG5cclxuICAgICAgICAgICAgLy8gQ3JlYXRlIGRpdjpcclxuICAgICAgICAgICAgdmFyIGRpdiA9IFJldHlwZWQucmVhY3QuUmVhY3QuRE9NLmRpdi5TZWxmKG5ldyBSZXR5cGVkLnJlYWN0LlJlYWN0LkhUTUxBdHRyaWJ1dGVzIDxnbG9iYWw6OlJldHlwZWQuZG9tLkhUTUxEaXZFbGVtZW50PnsgY2xhc3NOYW1lID0gXCJ3cmFwcGVyXCIgfSwgbmV3IFtdIHtcclxuICAgICAgICAgICAgICAgIGxhYmVsTm9kZSxcclxuICAgICAgICAgICAgICAgIGlucHV0Tm9kZSxcclxuICAgICAgICAgICAgICAgIGJ1dHRvbk5vZGV9KTtcclxuXHJcbiAgICAgICAgICAgIHJldHVybiBkaXY7XHJcbiAgICAgICAgfVxyXG5cclxuICAgICAgICBbT2JqZWN0TGl0ZXJhbF1cclxuICAgICAgICBwdWJsaWMgY2xhc3MgUHJvcHNcclxuICAgICAgICB7XHJcbiAgICAgICAgICAgIHB1YmxpYyBzdHJpbmcgTGFiZWw7XHJcbiAgICAgICAgICAgIHB1YmxpYyBBY3Rpb248c3RyaW5nPiBPblNhdmU7XHJcbiAgICAgICAgfVxyXG5cclxuICAgICAgICBbT2JqZWN0TGl0ZXJhbF1cclxuICAgICAgICBwdWJsaWMgY2xhc3MgU3RhdGUgOiBlczUuUGljazxTdGF0ZSwgS2V5T2Y8U3RhdGU+PlxyXG4gICAgICAgIHtcclxuICAgICAgICAgICAgcHVibGljIHN0cmluZyBWYWx1ZTtcclxuICAgICAgICB9XHJcbiAgICB9XHJcblxyXG4gICAgW0V4dGVybmFsXVxyXG4gICAgcHVibGljIHN0YXRpYyBjbGFzcyBFeHRlbnNpb25zXHJcbiAgICB7XHJcbiAgICAgICAgLy8vIDxzdW1tYXJ5PlxyXG4gICAgICAgIC8vLyBDb252ZXJ0cyBET01FbGVtZW50IC0+IFJlYWN0Tm9kZS5cclxuICAgICAgICAvLy8gPC9zdW1tYXJ5PlxyXG4gICAgICAgIFtUZW1wbGF0ZShcInswfVwiKV1cclxuICAgICAgICBwdWJsaWMgc3RhdGljIGV4dGVybiBSZXR5cGVkLnJlYWN0LlJlYWN0LlJlYWN0Tm9kZSBBc05vZGU8UCwgVD4odGhpcyBSZXR5cGVkLnJlYWN0LlJlYWN0LkRPTUVsZW1lbnQgPFAsVD5lbClcclxuICAgICAgICAgICAgd2hlcmUgUCA6IFJldHlwZWQucmVhY3QuUmVhY3QuRE9NQXR0cmlidXRlc1xyXG48VD4gICAgICAgICAgICB3aGVyZSBUIDogUmV0eXBlZC5kb20uRWxlbWVudDtcclxuICAgIH1cclxuXHJcbiAgICBbRXh0ZXJuYWxdXHJcbiAgICBwdWJsaWMgc3RhdGljIGNsYXNzIEhhbmRsZXJcclxuICAgIHtcclxuICAgICAgICBbVGVtcGxhdGUoXCJ7MH1cIildXHJcbiAgICAgICAgcHVibGljIHN0YXRpYyBleHRlcm4gUmV0eXBlZC5yZWFjdC5SZWFjdC5DaGFuZ2VFdmVudEhhbmRsZXIgPFRFbGVtZW50PkNoYW5nZUV2ZW50PFRFbGVtZW50PihBY3Rpb248UmV0eXBlZC5yZWFjdC5SZWFjdC5DaGFuZ2VFdmVudDxURWxlbWVudD4+IGFjdGlvbik7XHJcblxyXG4gICAgICAgIFtUZW1wbGF0ZShcInswfVwiKV1cclxuICAgICAgICBwdWJsaWMgc3RhdGljIGV4dGVybiBSZXR5cGVkLnJlYWN0LlJlYWN0Lk1vdXNlRXZlbnRIYW5kbGVyIDxURWxlbWVudD5Nb3VzZUV2ZW50PFRFbGVtZW50PihBY3Rpb248UmV0eXBlZC5yZWFjdC5SZWFjdC5Nb3VzZUV2ZW50PFRFbGVtZW50Pj4gYWN0aW9uKTtcclxuICAgIH1cclxufVxyXG4iXQp9Cg==
+});
