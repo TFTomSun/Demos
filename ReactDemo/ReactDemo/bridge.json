@@ -51,7 +51,7 @@
 
   "loader": {
     "type": "CommonJS",
-    "manualLoading": true
+    "manualLoading": false
   }
 
   // More config options available at

@@ -34,16 +34,7 @@
     <NoStdLib>true</NoStdLib>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="Common\_global\CommonExtensions.cs" />
     <Compile Include="Demo.cs" />
-    <Compile Include="Framework\ClassDescriptor.cs" />
-    <Compile Include="Framework\DomNodeDescriptor.cs" />
-    <Compile Include="Framework\Handler.cs" />
-    <Compile Include="Framework\IDomNodeDescriptor.cs" />
-    <Compile Include="Framework\ReactComponent.cs" />
-    <Compile Include="Framework\ReactLoader.cs" />
-    <Compile Include="Framework\_global\Extensions.cs" />
-    <Compile Include="Framework\_global\ExternalExtensions.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -98,6 +89,10 @@
     <ProjectReference Include="..\ReactCore\ReactCore.csproj">
       <Project>{286d7036-9d23-4ef2-9762-129d1d712e6a}</Project>
       <Name>ReactCore</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\ScriptLoader\ScriptLoader.csproj">
+      <Project>{9ec4a6f3-ab4e-49d5-9f1e-b5111fca070f}</Project>
+      <Name>ScriptLoader</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

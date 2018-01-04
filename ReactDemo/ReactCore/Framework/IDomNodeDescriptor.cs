@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using Bridge;
 using Retyped;
 
 namespace ReactCore.Framework

@@ -7,6 +7,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ReactDemo", "ReactDemo\Reac
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ReactCore", "ReactCore\ReactCore.csproj", "{286D7036-9D23-4EF2-9762-129D1D712E6A}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ScriptLoader", "ScriptLoader\ScriptLoader.csproj", "{9EC4A6F3-AB4E-49D5-9F1E-B5111FCA070F}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +23,10 @@ Global
 		{286D7036-9D23-4EF2-9762-129D1D712E6A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{286D7036-9D23-4EF2-9762-129D1D712E6A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{286D7036-9D23-4EF2-9762-129D1D712E6A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9EC4A6F3-AB4E-49D5-9F1E-B5111FCA070F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9EC4A6F3-AB4E-49D5-9F1E-B5111FCA070F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9EC4A6F3-AB4E-49D5-9F1E-B5111FCA070F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9EC4A6F3-AB4E-49D5-9F1E-B5111FCA070F}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

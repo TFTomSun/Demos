@@ -1,4 +1,3 @@
-using Bridge;
 using Retyped;
 
 namespace ReactCore.Framework

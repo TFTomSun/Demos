@@ -1,9 +1,7 @@
 using System;
 using System.Linq.Expressions;
 using System.Reflection;
-using Bridge;
 using ReactCore.Framework;
-using Retyped;
 using static Retyped.dom;
 using static Retyped.react.React;
 using static Retyped.react_dom;
@@ -29,9 +27,9 @@ using static Retyped.react_dom;
             Expression<Func<TProperties, TValue>> expression, TValue value)
             where TProperties : new()
         {
-            //var property = (PropertyInfo)expression.GetMemberInfo().Member;
-            //property.SetValue(descriptor.Properties, value);
-            return descriptor;
+        var property = (PropertyInfo)expression.GetMemberInfo().Member;
+        property.SetValue(descriptor.Properties, value);
+        return descriptor;
         }
         public static DomNodeDescriptor<TNode, TProperties> With<TNode, TProperties, TValue>(
             this DomNodeDescriptor<TNode, TProperties> descriptor, 
@@ -129,11 +127,11 @@ using static Retyped.react_dom;
         }
 
         public static DomNodeDescriptor<TNode, TProperties> WithOnChange<TNode,TProperties>(this DomNodeDescriptor<TNode,TProperties> descriptor,
-            Action<ChangeEvent<TNode>> eventHandler)
+            Action<TNode> eventHandler)
             where TNode : HTMLElement
             where TProperties :ChangeTargetHTMLAttributes<TNode>, new()
         {
-            descriptor.Properties.onChange = Handler.ChangeEvent(eventHandler);
+            descriptor.Properties.onChange = Handler.ChangeEvent(new Action<ChangeEvent<TNode>>(eh=>eventHandler(eh.currentTarget.Type2)));
             return descriptor;
         }
         public static DomNodeDescriptor<TNode, TProperties> WithOnClick<TNode, TProperties>(this DomNodeDescriptor<TNode, TProperties> descriptor,

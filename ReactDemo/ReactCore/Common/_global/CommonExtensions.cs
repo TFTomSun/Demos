@@ -1,9 +1,12 @@
 using System;
 using System.Linq.Expressions;
-using Bridge;
 
     public static class CommonExtensions
     {
+        public static bool IsNullOrEmpty(this string value)
+        {
+            return string.IsNullOrEmpty(value);
+        }
         public static MemberExpression GetMemberInfo(this LambdaExpression lambda)
         {
             if (lambda == null)

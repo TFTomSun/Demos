@@ -170,40 +170,37 @@ namespace ReactDemo
 #region New
 using System;
 using Bridge;
-using ReactDemo.Framework;
+using ReactCore.Framework;
+using Retyped;
+using ScriptLoader;
 
 namespace ReactDemo
 {
+    [FileName("EntryPoint.js")]
+    public class EntryPoint
+    {
+        [Init(InitPosition.Top)]
+        public static void InitTop()
+        {
+            Loader.PackageDefinitions.Add("react", "React");
+            Loader.PackageDefinitions.Add("react-dom", "ReactDOM");
+            Loader.LoadScripts(() => new Demo().Run(), false,
+                //"js/bridge.min.js" ,
+                "https://cdnjs.cloudflare.com/ajax/libs/Bridge.NET/16.5.0/bridge.console.min.js",
+                "https://cdnjs.cloudflare.com/ajax/libs/react/15.3.1/react.min.js",
+                "http://cdnjs.cloudflare.com/ajax/libs/react/15.3.1/react-dom.min.js",
+                "js/ReactCore.js", "js/ReactCore.meta.js",
+                "js/ReactDemo.js", "js/ReactDemo.meta.js");
+        }
+    }
+
     public class Demo
     {
-        public static void Main()
-        {
-            //@ function loadScript(url, callback)
-            //@ {
-            //@     // Adding the script tag to the head as suggested before
-            //@     var head = document.getElementsByTagName('head')[0];
-            //@     var script = document.createElement('script');
-            //@     script.type = 'text/javascript';
-            //@     script.src = url;
-            //@ 
-            //@     // Then bind the event to the callback function.
-            //@     // There are several events for cross browser compatibility.
-            //@     script.onreadystatechange = callback;
-            //@     script.onload = callback;
-            //@ 
-            //@     // Fire the loading
-            //@     head.appendChild(script);
-            //@ }
-            //@ loadScript("js/ReactDemo.meta.js", function(){new ReactDemo.Demo().Run();});
-
-            //new Demo().Run();
-        }
-
-        private void Run()
+        public void Run()
         {
             MessageEntryForm.Define()
                 .With(x => x.Label, "Text:")
-                .With(x => x.OnSave, value => Console.WriteLine($"Entered value: '{value}'."))
+                .With(x => x.OnSave, value => System.Console.WriteLine($"Entered value: '{value}'."))
                 .Render("root");
         }
     }
@@ -230,7 +227,7 @@ namespace ReactDemo
                 .With(x => x.size, 50)
                 .With(x => x.style, s => s.WithMargin(50))
                 .WithOnChange(e => this.UpdateState(x=>x.Value,e.value));
-
+ 
             var button = div.Add(x => x.button, "button1")
                 .With(x => x.style, v => v.WithSize(150, 28).WithMargin(20))
                 .With(x => x.disabled, string.IsNullOrWhiteSpace(this.state.Value))
